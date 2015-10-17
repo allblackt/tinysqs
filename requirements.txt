@@ -1,0 +1,2 @@
+# runs stuff from setup.py
+-e .
