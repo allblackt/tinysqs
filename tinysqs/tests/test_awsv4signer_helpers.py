@@ -59,7 +59,6 @@ def test_hash_sha256_with_hex(hashlib):
 
 @patch('tinysqs.awsv4signer.sign')
 def test_get_signature_key(sign):
-    # def f
     sign.side_effect = lambda x, y: str(x) + str(y)
     sk = get_signature_key('key', 'date_stamp', 'region_name', 'service_name')
 
