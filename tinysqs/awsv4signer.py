@@ -1,6 +1,7 @@
 import hmac
 import hashlib
 import datetime
+from functools import reduce
 
 
 def sign(key, msg, hex=False):
@@ -16,11 +17,11 @@ def hash_sha256(msg, hex=False):
 
 
 def get_signature_key(key, date_stamp, region_name, service_name):
-    kDate = sign(('AWS4' + key).encode('utf-8'), date_stamp)
-    kRegion = sign(kDate, region_name)
-    kService = sign(kRegion, service_name)
-    kSigning = sign(kService, 'aws4_request')
-    return kSigning
+    return reduce(sign, [('AWS4' + key).encode('utf-8'),
+                         date_stamp,
+                         region_name,
+                         service_name,
+                         'aws4_request'])
 
 
 class AWSV4Signer(object):
