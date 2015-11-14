@@ -4,6 +4,6 @@ python:
 install:
     - "pip install -r requirements-dev.txt"
     - "pip install coveralls"
-script: py.test --cov tinysqs tinysqs
+script: make test
 after_success:
   - coveralls
