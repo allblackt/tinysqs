@@ -33,17 +33,19 @@ class AWSV4Signer(object):
     method = 'POST'
     content_type = 'application/x-www-form-urlencoded'
     algorithm = 'AWS4-HMAC-SHA256'
+    host_pattern = '{service}.{region}.amazonaws.com'
+    endpoint_pattern = 'https://{host}'
 
     def __init__(self, access_key, secret_key):
         self.access_key = access_key
         self.secret_key = secret_key
 
-    def sign_request(self, service, region, params, path='/'):
+    def sign_request(self, service, region, params, path='/', query_string=''):
         if not path.startswith('/'):
             raise ValueError("The `path` parameter must always start with / (forwardslash).")
 
-        host = '{service}.{region}.amazonaws.com'.format(region=region, service=service)
-        endpoint = 'https://{host}'.format(host=host)
+        host = self.host_pattern.format(region=region, service=service)
+        endpoint = self.endpoint_pattern.format(host=host)
 
         t = datetime.datetime.utcnow()
         amz_date = t.strftime('%Y%m%dT%H%M%SZ')
@@ -51,9 +53,6 @@ class AWSV4Signer(object):
 
         request_parameters = '&'.join(['='.join([k, v]) for k, v in params.items()])
         payload_hash = hash_sha256(request_parameters, hex=True)
-
-        canonical_uri = path
-        canonical_querystring = ''
 
         canonical_headers = ('content-type:{content_type}\n'
                              'host:{host}\n'
@@ -64,8 +63,8 @@ class AWSV4Signer(object):
         signed_headers = 'content-type;host;x-amz-date'
 
         canonical_request = '\n'.join([self.method,
-                                       canonical_uri,
-                                       canonical_querystring,
+                                       path,  # Canonical uri is the path
+                                       query_string,
                                        canonical_headers,
                                        signed_headers,
                                        payload_hash])

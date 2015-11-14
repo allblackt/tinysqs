@@ -4,7 +4,7 @@ from distutils.core import setup
 
 install_requires = ['requests >= 1.2.0']
 
-tests_require = ['pytest', 'pytest-cov']
+tests_require = ['pytest', 'pytest-cov', 'pytest-raisesregexp']
 
 setup(name='tinysqs',
       version='0.0.1',
