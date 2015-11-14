@@ -1,7 +1,9 @@
 language: python
 python:
   - "3.4"
-install: "pip install -r requirements-dev.txt"
-script: py.test --cov tinysqs --cov-report term-missing tinysqs
+install:
+    - "pip install -r requirements-dev.txt"
+    - "pip install coveralls"
+script: py.test --cov tinysqs tinysqs
 after_success:
   - coveralls

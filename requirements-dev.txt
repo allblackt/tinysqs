@@ -3,7 +3,5 @@
 pytest
 pytest-cov
 pytest-raisesregexp
-python-coveralls
-coverage
 
 -e .
