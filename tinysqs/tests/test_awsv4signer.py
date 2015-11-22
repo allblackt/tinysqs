@@ -1,3 +1,4 @@
+from unittest.mock import patch
 import pytest
 from tinysqs.awsv4signer import AWSV4Signer
 
@@ -31,5 +32,10 @@ def test_sign_request_path_error():
                                                              'bad_path')
 
 
-def test_sign_request():
-    pass
+@patch('tinysqs.awsv4signer.datetime')
+@patch.object(AWSV4Signer, 'endpoint_pattern')
+@patch.object(AWSV4Signer, 'host_pattern')
+def test_sign_request(host_pattern, endpoint_pattern, datetime):
+    signer = AWSV4Signer('access_key', 'secret_key')
+    signer.sign_request('service', 'region', 'params')
+    print(host_pattern, endpoint_pattern)
